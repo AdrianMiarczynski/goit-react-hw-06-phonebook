@@ -1,6 +1,16 @@
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import css from './filter.module.css';
-const FilterContacts = ({ filter, filterEvcontacts }) => {
+import { setStatutFilter } from 'components/redux/sliceFilter';
+
+const FilterContacts = () => {
+  const dispatch = useDispatch();
+
+  const filterEvcontacts = ev => [
+    dispatch(setStatutFilter(ev.target.value)),
+    console.log(setStatutFilter(ev.target.value)),
+  ];
+
   return (
     <label htmlFor="filter" className={css.filter}>
       Find contacts by name
@@ -9,7 +19,7 @@ const FilterContacts = ({ filter, filterEvcontacts }) => {
         name="filter"
         className={css['filter__input']}
         id="filter"
-        value={filter}
+        // value={filter}
         onChange={filterEvcontacts}
       />
     </label>
@@ -17,7 +27,6 @@ const FilterContacts = ({ filter, filterEvcontacts }) => {
 };
 export default FilterContacts;
 
-FilterContacts.propTypes = {
-  filter: PropTypes.string.isRequired,
-  filterEvcontacts: PropTypes.func.isRequired,
-};
+// FilterContacts.propTypes = {
+//   filterEvcontacts: PropTypes.func.isRequired,
+// };

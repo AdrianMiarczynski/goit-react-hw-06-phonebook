@@ -1,34 +1,37 @@
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
+import { addContact } from 'components/redux/sliceContacts';
 import css from './contactsform.module.css';
+import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
-import { useState } from 'react';
 
-const ContactsForm = ({ filterContacts, addContacts }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-
-  const handlerChange = ev => {
-    setName(ev.target.value);
-  };
-  const handlerChangeNumber = ev => {
-    setNumber(ev.target.value);
-  };
+const ContactsForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts);
 
   const handlerSubmit = ev => {
     ev.preventDefault();
-    const id = nanoid();
-    if (filterContacts(name).length !== 0) {
-      return alert(`${name} is already in contacts`);
+    const form = ev.target;
+    const newContact = {
+      name: form.elements.name.value,
+      number: form.elements.number.value,
+      id: nanoid(),
+    };
+    const contactsFilter = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(newContact.name.toLowerCase())
+    );
+    if (contactsFilter.length !== 0) {
+      return alert(`${newContact.name} is already in contacts`);
     }
-    addContacts({ name, number, id });
+    dispatch(addContact(newContact));
+    form.reset();
   };
   return (
     <form onSubmit={handlerSubmit} className={css.form}>
       <label htmlFor="name" className={css['form__label']}>
         Name
         <input
-          onChange={handlerChange}
-          value={name}
+          // onChange={handlerChange}
+          // value={name}
           type="text"
           className={css['form__input']}
           name="name"
@@ -47,9 +50,9 @@ const ContactsForm = ({ filterContacts, addContacts }) => {
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
           id="number"
-          value={number}
+          // value={number}
           className={css['form__input']}
-          onChange={handlerChangeNumber}
+          // onChange={handlerChangeNumber}
         />
       </label>
       <button type="submit" className={css['form__btn']}>
@@ -60,7 +63,7 @@ const ContactsForm = ({ filterContacts, addContacts }) => {
 };
 export default ContactsForm;
 
-ContactsForm.propTypes = {
-  addContacts: PropTypes.func.isRequired,
-  filterContacts: PropTypes.func.isRequired,
-};
+// ContactsForm.propTypes = {
+//   addContacts: PropTypes.func.isRequired,
+//   filterContacts: PropTypes.func.isRequired,
+// };
